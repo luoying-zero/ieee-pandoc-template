@@ -1,0 +1,50 @@
+---
+title: "基于 Pandoc 的中文 IEEE 论文模板示例"
+
+author:
+  - name: "张三"
+    affiliation: "某某大学计算机学院"
+    location: "中国 北京"
+    email: "zhangsan@example.com"
+
+date: "2026年5月"
+
+abstract: |
+  这里是中文摘要。本文展示如何使用 Pandoc、XeLaTeX 和 IEEEtran
+  模板生成包含中文内容的论文。通过在 metadata.yaml 中设置中文字体，
+  可以正确处理中文标题、作者、摘要、关键词以及正文内容。
+
+keywords:
+  - 深度强化学习
+  - 分布式训练
+  - 并行计算
+  - 数据扩展
+  - 网络扩展
+  - 训练预算扩展
+
+# 建议使用 xelatex
+CJKmainfont: "Noto Serif CJK SC"
+
+# 可选：中文字体选项
+CJKoptions:
+  - AutoFakeBold=true
+  - AutoFakeSlant=true
+
+# 英文字体，可选
+# mainfont: "Times New Roman"
+
+# 纸张大小
+papersize: a4
+
+# 字号
+fontsize: 10pt
+
+# 是否给章节编号
+numbersections: true
+
+# 超链接设置，可选
+colorlinks: true
+linkcolor: blue
+citecolor: blue
+urlcolor: blue
+---

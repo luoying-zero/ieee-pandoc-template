@@ -1,0 +1,49 @@
+name: Manual Build with Pandoc & TeX Live
+
+on:
+  workflow_dispatch:   # 允许手动触发（Actions 页面会出现 “Run workflow” 按钮）
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Pandoc + TeX Live)
+        run: |
+          sudo apt-get update -y
+          sudo apt install pandoc texlive-xetex texlive-lang-chinese texlive-publishers texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+
+      - name: Install Noto Serif CJK SC
+        run: |
+          sudo apt-get install -y unzip fontconfig curl
+
+          # 下载 SC 专用 ZIP（最新版本示例，可替换为其他 release）
+          curl -L -o /tmp/NotoSerifCJKsc.zip \
+            "https://github.com/notofonts/noto-cjk/releases/download/Serif2.003/09_NotoSerifCJKsc.zip"
+
+          # 解压
+          unzip -o /tmp/NotoSerifCJKsc.zip -d /tmp/noto-serif-cjk-sc/
+
+          # 创建字体目录（推荐 opentype 路径，也可用 truetype）
+          sudo mkdir -p /usr/share/fonts/opentype/notoserifcjksc
+
+          find /tmp/noto-serif-cjk-sc -type f -iname "*.otf" \
+            -exec sudo cp {} /usr/share/fonts/opentype/notoserifcjksc/ \;
+
+          # 刷新字体缓存（关键步骤）
+          sudo fc-cache -fv
+      - name: Run make
+        run: make
+
+      - name: Upload build/ artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build/
+          # 可选：保留天数（默认 90 天）
+          retention-days: 30
+          # 可选：如果 build/ 为空则报错（默认 warn）
+          if-no-files-found: warn
